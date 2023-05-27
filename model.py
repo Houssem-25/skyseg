@@ -1,7 +1,8 @@
 import torch
 import torch.nn as nn
 from mmengine.config import Config
-from mmseg.apis import init_model
+from mmengine.dataset.base_dataset import Compose
+from mmseg.apis import init_model, inference_model
 import torch.nn.functional as F
 
 class SkySegmentation(nn.Module):
@@ -27,12 +28,13 @@ class SkySegmentation(nn.Module):
     def segment_sky(self, image):
         _,_,w,h = image.size()
         logits_model_1,logits_model_2 = self.forward(image)
-        logits_model_1 = torch.nn.functional.interpolate(logits_model_1, (w, h))
+        logits_model_1 = torch.nn.functional.interpolate(logits_model_1, (w, h)) # Resize logits to original image size
         logits_model_2 = torch.nn.functional.interpolate(logits_model_2, (w, h))
-        mask_model_1 = self.logits_to_mask(logits_model_1) == self.sky_id_model_1
+
+        mask_model_1 = self.logits_to_mask(logits_model_1) == self.sky_id_model_1 # Convert logits to mask for and keep only sky
         mask_model_2 = self.logits_to_mask(logits_model_2) == self.sky_id_model_2
 
-
+        mask_model_1, mask_model_2 = self.aggregate_masks(mask_model_1, mask_model_2)
         return mask_model_1, mask_model_2
     def logits_to_mask(self, logits):
         # Apply softmax activation along the class dimension
@@ -42,3 +44,8 @@ class SkySegmentation(nn.Module):
         _, predicted_classes = torch.max(probabilities, dim=1)
 
         return predicted_classes
+
+
+    def aggregate_masks(self, mask1, mask2):
+        return mask1 + mask2, mask1*mask2
+
