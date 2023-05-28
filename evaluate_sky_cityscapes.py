@@ -11,7 +11,7 @@ def downsample(tensor, factor=2):
     return torch.nn.functional.interpolate(tensor, (w//factor,h//factor))
 
 @torch.no_grad()
-def evaluate(model, dataloader, class_id):
+def evaluate(model, dataloader, class_id, single_model):
     model.eval()
     with torch.no_grad():
         total_correct_1 = 0
@@ -21,12 +21,16 @@ def evaluate(model, dataloader, class_id):
             images = downsample(images.cuda())
             labels = downsample(labels.unsqueeze(1).cuda()).squeeze(1)
             labels = (labels == class_id)
-            mask_model_1, mask_model_2 = model.segment_sky(images)
+            if single_model:
+                mask_model_1 = model.segment_sky(images)
+            else:
+                mask_model_1,mask_model_2 = model.segment_sky(images)
+                correct = (mask_model_2 == labels).sum()
+                total_correct_2 += correct.item()
 
             correct = (mask_model_1 == labels).sum()
             total_correct_1 += correct.item()
-            correct = (mask_model_2 == labels).sum()
-            total_correct_2 += correct.item()
+
 
             total_pixels += labels.numel()
 
@@ -48,6 +52,6 @@ if __name__ == "__main__":
     eval_dataloader = DataLoader(eval_dataset, batch_size=opt.batch_size, shuffle=False, num_workers=opt.num_workers)
 
     # Evaluate the model
-    accuracy_1, accuracy_2 = evaluate(model, eval_dataloader, class_id)
+    accuracy_1, accuracy_2 = evaluate(model, eval_dataloader, class_id, opt.single_model)
     print(f"Accuracy for class {class_id} using OR : {accuracy_1}")
     print(f"Accuracy for class {class_id} using AND: {accuracy_2}")

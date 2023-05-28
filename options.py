@@ -1,5 +1,5 @@
 import argparse
-
+from torchvision.datasets.coco import CocoDetection
 class Option:
     def __init__(self):
         self.parser = argparse.ArgumentParser(description='Script options')
@@ -9,6 +9,7 @@ class Option:
         self.parser.add_argument('--batch_size', type=int, default=1, help='Batch size for evaluation')
         self.parser.add_argument('--num_workers', type=int, default=4, help='Number of workers for data loading')
         self.parser.add_argument('--device', type=int, default=0, help='Device to use ( use -1 for cpu) ')
+        self.parser.add_argument('--single_model', action='store_true', help='If set use a single model for infrence ')
 
     def parse(self):
         return self.parser.parse_args()
