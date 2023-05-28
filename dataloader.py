@@ -3,6 +3,7 @@ import numpy as np
 from PIL import Image
 from torch.utils import data
 from torchvision import transforms
+import torch
 
 class CityscapesSegmentation(data.Dataset):
     NUM_CLASSES = 19
@@ -13,7 +14,7 @@ class CityscapesSegmentation(data.Dataset):
         self.files = {}
 
         self.images_base = os.path.join(self.root, 'leftImg8bit', self.split)
-        self.annotations_base = os.path.join(self.root, 'gtFine_trainvaltest', 'gtFine', self.split)
+        self.annotations_base = os.path.join(self.root, 'gtFine', self.split)
 
         self.files[split] = self.recursive_glob(rootdir=self.images_base, suffix='.png')
 
@@ -27,9 +28,9 @@ class CityscapesSegmentation(data.Dataset):
         self.ignore_index = 255
         self.class_map = dict(zip(self.valid_classes, range(self.NUM_CLASSES)))
         self.composed_transforms = transforms.Compose([
+            transforms.ToTensor(),
             transforms.Normalize(mean=(0.485, 0.456, 0.406), std=(0.229, 0.224, 0.225)),
-            transforms.ToTensor()])
-
+            ])
         if not self.files[split]:
             raise Exception("No files for split=[%s] found in %s" % (split, self.images_base))
 
@@ -39,7 +40,6 @@ class CityscapesSegmentation(data.Dataset):
         return len(self.files[self.split])
 
     def __getitem__(self, index):
-
         img_path = self.files[self.split][index].rstrip()
         lbl_path = os.path.join(self.annotations_base,
                                 img_path.split(os.sep)[-2],
@@ -47,12 +47,9 @@ class CityscapesSegmentation(data.Dataset):
 
         _img = Image.open(img_path).convert('RGB')
         _tmp = np.array(Image.open(lbl_path), dtype=np.uint8)
-        _tmp = self.encode_segmap(_tmp)
-        _target = Image.fromarray(_tmp)
+        target = torch.tensor(self.encode_segmap(_tmp))
 
-        sample = {'image': _img, 'label': _target}
-
-        return self.composed_transforms(sample)
+        return self.composed_transforms(_img), target
 
     def encode_segmap(self, mask):
         # Put all void classes to zero
