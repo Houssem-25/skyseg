@@ -36,7 +36,7 @@ def evaluate(model, dataloader, single_model):
 if __name__ == "__main__":
     # init model
     opt = Option().parse()
-    eval_dataset = CocoSemantic("/home/houssem/PhD/datasets/COCO/val2017", "/home/houssem/PhD/datasets/COCO/panoptic_val2017")
+    eval_dataset = CocoSemantic(opt.data_root)
     device = torch.device(opt.device)
     eval_dataloader = DataLoader(eval_dataset, batch_size=opt.batch_size, shuffle=False, num_workers=opt.num_workers)
 

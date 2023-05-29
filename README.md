@@ -13,7 +13,7 @@ pip install setuptools==59.5.0
 pip install torch==1.10.0+cu111 torchvision==0.11.0+cu111 torchaudio==0.10.0 -f https://download.pytorch.org/whl/torch_stable.html --no-cache-dir
 pip install mmcv==2.0.0 -f https://download.openmmlab.com/mmcv/dist/cu113/torch1.10/index.html
 pip install "mmsegmentation>=1.0.0"
-pip install tensorboardX tqdm
+pip install tensorboardX tqdm scikit-learn
 pip install git+https://github.com/cocodataset/panopticapi.git
 ```
 
@@ -73,6 +73,7 @@ The obtained results :
 
 | `Model`               | Acc   | 
 |-----------------------|-------|
+| **Classical method**  | 80.27 |
 | **Trained on CS**     | 99.56 | 
 | **Trained on ADE20K** | 77.61 | 
 | **Bagging OR**        | 99.39 | 
@@ -117,9 +118,9 @@ python evaluate_sky_coco.py --data_root [Path to cityscapes dataset] --single_mo
 
 The obtained results : 
 
-
 | `Model`               | Acc   | 
 |-----------------------|-------|
+| **Classical method**  | 69.78 |
 | **Trained on CS**     | 93.44 | 
 | **Trained on ADE20K** | 91.30 | 
 | **Bagging OR**        | 90.84 | 

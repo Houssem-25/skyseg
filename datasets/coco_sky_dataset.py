@@ -8,9 +8,9 @@ import os
 from glob import glob
 from utils import pngToCocoResult
 class CocoSemantic(Dataset):
-    def __init__(self, img_dir, mask_dir):
-        self.root_dir = img_dir
-        self.mask_dir = mask_dir
+    def __init__(self, data_root):
+        self.root_dir = os.path.join(data_root,"val2017")
+        self.mask_dir = os.path.join(data_root,"panoptic_val2017")
         self.image_files = glob(self.root_dir +"/*")
 
         self.image_files = sorted(self.image_files , key=lambda x: int(x.split(".")[0].split("/")[-1]))
