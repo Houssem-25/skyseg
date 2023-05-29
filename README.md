@@ -79,11 +79,13 @@ The obtained results :
 | **Bagging OR**        | 99.39 | 
 | **Bagging AND**       | 99.35 | 
 
-Without surprise the model trained on CS and evaluated on CV yield great results. 
+- Without surprise the model trained on CS and evaluated on CS yield great results. 
 
-The model trained on ADE20K present acceptable results.
+- The model trained on ADE20K present acceptable results.
 
-Bagging is greatly impacted by the performance of ADE20K model. 
+- Bagging is greatly impacted by the performance of ADE20K model. 
+
+- The classical method was tuned to have the best results on cityscapes. This method achieves good results.
 
 ## 💾 Evaluate on COCO 
 First download the dataset and extract it the files should have the following structre:
@@ -126,16 +128,18 @@ The obtained results :
 | **Bagging OR**        | 90.84 | 
 | **Bagging AND**       | 93.89 | 
 
-As observed the model trained on ADE20K achieves competitive results on this dataset. 
+- As observed the model trained on ADE20K achieves competitive results on this dataset. 
 
-The model trained using cityscapes dataset presents good generalization.
+- The model trained using cityscapes dataset presents good generalization.
 
-Bagging do not improve the further the results obtained by cityscpaes.
+- Bagging do not improve the further the results obtained by cityscapes.
+
+- As the classical method was tuned for Cityscapes, this method is not able to generalize in domain shift when evaluated on COCO
 
 In conclusion : 
 - The cityapes model achieves good generalization.
 - Bagging solution is not required for our setting as the cityscapes model achieves good generalization
-
+- The clustring method is not practical as it does not generalize well
 ## 💾 Training a new model
 
 In order to train a new model lauch the following command : 
@@ -145,6 +149,6 @@ python train.py --data_root /home/houssem/PhD/datasets/cityscapes --single_model
 ```
 
 ## ToDo: 
-1- Export to onnx 
-2- Retrain the model on the latest segment anything dataset and fine tune on only sky.
-3- Adapt the model to the hardware to be used (More or less paramters, prunning, quantization).
+- Export to onnx 
+- Retrain the model on the latest segment anything dataset and fine tune on only sky.
+- Adapt the model to the hardware to be used (More or less paramters, prunning, quantization).
