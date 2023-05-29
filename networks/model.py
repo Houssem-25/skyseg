@@ -9,13 +9,13 @@ class SkySegmentation(nn.Module):
         super(SkySegmentation, self).__init__()
         self.single_model = opt.single_model
         self.opt = opt
-        config_file = 'networks/configs/segformer/segformer_mit-b5_8xb2-160k_ade20k-640x640.py'
+        config_file = 'networks/configs/segformer/segformer_mit-b5_8xb1-160k_cityscapes-1024x1024.py'
         cfg = Config.fromfile(config_file)
         self.model_1 = init_model(cfg, cfg._cfg_dict["checkpoint_file"], device='cuda:0')
         self.sky_id_model_1 = self.model_1.dataset_meta["classes"].index("sky")
 
         if not self.single_model:
-            config_file = 'networks/configs/segformer/segformer_mit-b5_8xb1-160k_cityscapes-1024x1024.py'
+            config_file = 'networks/configs/segformer/segformer_mit-b5_8xb2-160k_ade20k-640x640.py'
             cfg = Config.fromfile(config_file)
             self.model_2 = init_model(cfg, cfg._cfg_dict["checkpoint_file"], device='cuda:0')
             self.sky_id_model_2 = self.model_2.dataset_meta["classes"].index("sky")

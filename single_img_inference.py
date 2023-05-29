@@ -1,11 +1,9 @@
-from model import SkySegmentation
-import torch
+from networks.model import SkySegmentation
 from  PIL import Image
-import torch
 import numpy as np
 import torchvision.transforms as transforms
 import matplotlib.pyplot as plt
-
+from options import Option
 
 def plot_mask_overlay(image, mask):
     # Convert mask to a binary array
@@ -33,12 +31,15 @@ def plot_mask_overlay(image, mask):
     plt.tight_layout()
     plt.show()
 
+
+
+opt = Option().parse()
+
+image = Image.open(opt.data_root)
 transform = transforms.ToTensor()
-image = Image.open("demo.jpeg")
 tensor_image = transform(image).cuda()
 
-
-model = SkySegmentation("")
-out1, out2 = model.segment_sky(tensor_image.unsqueeze(0))
-plot_mask_overlay(image, out1)
-plot_mask_overlay(image, out2)
+model = SkySegmentation(opt)
+mask_model_1, mask_model_2 = model.segment_sky(tensor_image.unsqueeze(0))
+plot_mask_overlay(image, mask_model_1)
+plot_mask_overlay(image, mask_model_2)

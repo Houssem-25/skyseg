@@ -1,8 +1,6 @@
-import torch
-from coco_dataloader import CocoSemantic
-from torchvision import transforms
+from datasets.coco_sky_dataset import CocoSemantic
 from torch.utils.data import DataLoader
-from model import SkySegmentation
+from networks.model import SkySegmentation
 from options import Option
 from tqdm import tqdm
 import torch

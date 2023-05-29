@@ -1,8 +1,6 @@
-import torch
-from dataloader import CityscapesSegmentation
-from torchvision import transforms
+from datasets.cityscapes_dataset import CityscapesSegmentation
 from torch.utils.data import DataLoader
-from model import SkySegmentation
+from networks.model import SkySegmentation
 from options import Option
 from tqdm import tqdm
 import torch
