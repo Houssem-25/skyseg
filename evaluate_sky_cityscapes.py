@@ -39,7 +39,7 @@ def evaluate(model, dataloader, class_id, single_model):
 if __name__ == "__main__":
     # init model
     opt = Option().parse()
-    model = SkySegmentation(opt)
+    model = SkySegmentation(opt).cuda()
     class_id = model.sky_id_model_1
     eval_dataset = CityscapesSegmentation(opt.data_root, split='val')
     device = torch.device(opt.device)
