@@ -4,6 +4,20 @@ from mmengine.config import Config
 from mmseg.apis import init_model, inference_model
 import torch.nn.functional as F
 
+
+def replace_sync_batchnorm(module):
+    for name, child in module.named_children():
+        if isinstance(child, nn.SyncBatchNorm):
+            module.__setattr__(name, nn.BatchNorm2d(child.num_features,
+                                                     eps=child.eps,
+                                                     momentum=child.momentum,
+                                                     affine=child.affine,
+                                                     track_running_stats=child.track_running_stats))
+        else:
+            replace_sync_batchnorm(child)
+
+    return module
+
 class SkySegmentation(nn.Module):
     def __init__(self, opt):
         super(SkySegmentation, self).__init__()
@@ -20,7 +34,7 @@ class SkySegmentation(nn.Module):
             self.model_2 = init_model(cfg, cfg._cfg_dict["checkpoint_file"], device='cuda:0')
             self.sky_id_model_2 = self.model_2.dataset_meta["classes"].index("sky")
 
-
+        replace_sync_batchnorm(self)
     def forward(self, image):
         if self.single_model:
             logits_model = self.model_1(image)
