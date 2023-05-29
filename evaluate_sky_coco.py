@@ -9,7 +9,7 @@ def downsample(tensor, factor=2):
     return torch.nn.functional.interpolate(tensor, (w//factor,h//factor))
 
 @torch.no_grad()
-def evaluate(model, dataloader, class_id, single_model):
+def evaluate(model, dataloader, single_model):
     model.eval()
     with torch.no_grad():
         total_correct_1 = 0
@@ -49,6 +49,6 @@ if __name__ == "__main__":
     eval_dataloader = DataLoader(eval_dataset, batch_size=opt.batch_size, shuffle=False, num_workers=opt.num_workers)
 
     # Evaluate the model
-    accuracy_1, accuracy_2 = evaluate(model, eval_dataloader, class_id, opt.single_model)
+    accuracy_1, accuracy_2 = evaluate(model, eval_dataloader, opt.single_model)
     print(f"Accuracy for class {class_id} using OR : {accuracy_1}")
     print(f"Accuracy for class {class_id} using AND: {accuracy_2}")

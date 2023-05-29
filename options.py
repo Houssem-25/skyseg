@@ -10,6 +10,8 @@ class Option:
         self.parser.add_argument('--num_workers', type=int, default=4, help='Number of workers for data loading')
         self.parser.add_argument('--device', type=int, default=0, help='Device to use ( use -1 for cpu) ')
         self.parser.add_argument('--single_model', action='store_true', help='If set use a single model for infrence ')
+        self.parser.add_argument('--epochs', type=int, default=20, help='The number of epoc to train to model for')
+        self.parser.add_argument('--lr', type=float, default=0.0005, help='Learning rate for the optimizer')
 
     def parse(self):
         return self.parser.parse_args()
