@@ -71,12 +71,12 @@ python evaluate_sky_cityscapes.py --data_root [Path to cityscapes dataset] --sin
 The obtained results : 
 
 
-| `Model`               | Acc | 
-|-----------------------|------|
-| **Trained on CS**     | 99.56   | 
-| **Trained on ADE20K** | 77.61   | 
-| **Bagging OR**        | 500  | 
-| **Bagging AND**       | 500  | 
+| `Model`               | Acc   | 
+|-----------------------|-------|
+| **Trained on CS**     | 99.56 | 
+| **Trained on ADE20K** | 77.61 | 
+| **Bagging OR**        | 99.39 | 
+| **Bagging AND**       | 99.35 | 
 
 Without surprise the model trained on CS and evaluated on CV yield great results. 
 
@@ -132,7 +132,8 @@ The model trained using cityscapes dataset presents good generalization.
 Bagging do not improve the further the results obtained by cityscpaes.
 
 In conclusion : 
-- The cityapes model achieves good generalization therefore the Bagging solution is not required.
+- The cityapes model achieves good generalization.
+- Bagging solution is not required for our setting as the cityscapes model achieves good generalization
 
 ## 💾 Training a new model
 
